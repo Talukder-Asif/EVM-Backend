@@ -106,6 +106,13 @@ async function run() {
     });
 
 
+    app.get("/election", async (req, res) => {
+      const result = await electionCollection.find().toArray();
+      res.send(result);
+    });
+
+
+
 
 
 
