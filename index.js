@@ -63,7 +63,7 @@ async function run() {
       const options = { upsert: true };
       const updateTeam = {
         $set: {
-          name : data.name,
+          name: data.name,
           photoURL: data.photoURL,
           role: data.role,
           batch: data.batch,
@@ -95,7 +95,7 @@ async function run() {
       res.send(result);
     });
 
-// CURD Of Elections
+    // CURD Of Elections
     app.post("/election", async (req, res) => {
       const data = req.body;
       const user = await findUser(data.email);
@@ -105,14 +105,20 @@ async function run() {
       }
     });
 
-
     app.get("/election", async (req, res) => {
-      const result = await electionCollection.find().toArray();
+      const result = await electionCollection.find().sort({ _id: -1 }).toArray();
       res.send(result);
     });
 
-
-
+    // Delete ELection
+    app.delete("/election/:id", async (req, res) => {
+      const id = req.params.id;
+      const query = {
+        _id: new ObjectId(id),
+      };
+      const result = await electionCollection.deleteOne(query);
+      res.send(result);
+    });
 
 
 
