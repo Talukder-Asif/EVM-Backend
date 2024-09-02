@@ -106,7 +106,10 @@ async function run() {
     });
 
     app.get("/election", async (req, res) => {
-      const result = await electionCollection.find().sort({ _id: -1 }).toArray();
+      const result = await electionCollection
+        .find()
+        .sort({ _id: -1 })
+        .toArray();
       res.send(result);
     });
 
@@ -119,6 +122,44 @@ async function run() {
       const result = await electionCollection.deleteOne(query);
       res.send(result);
     });
+
+    // update User information
+    app.put("/element/:id", async (req, res) => {
+      const id = req.params.id;
+      const data = req.body;
+      const filter = { _id: new ObjectId(id) };
+      const options = { upsert: true };
+      const updateTeam = {
+        $set: {
+          electionName: data.electionName,
+          date: data.date,
+          departments: data.departments,
+          details: data.details,
+          candidate: data.candidate,
+          voter: data.voter,
+          status: data.status,
+          imageURL: data.imageURL,
+        },
+      };
+      try {
+        const result = await electionCollection.updateOne(
+          filter,
+          updateTeam,
+          options
+        );
+        res.send(result);
+      } catch (err) {
+        console.error("Error updating user:", err);
+        res.status(500).send("Error updating user");
+      }
+    });
+
+
+
+
+
+
+
 
 
 
