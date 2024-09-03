@@ -97,14 +97,24 @@ async function run() {
     });
 
     // CURD Of Department
+
+    const findDepartment = (department) => {
+      return departmentCollection.findOne({ department: department });
+    };
+
+
     app.post("/department", async (req, res) => {
       const data = req.body;
-      const user = await findUser(data.email);
-      if (!user) {
+      const department = await findDepartment(data.department);
+      if (!department) {
         const result = await departmentCollection.insertOne(data);
         res.send(result);
+      }else{
+        res.status(409).send("Department already exists");
       }
     });
+
+
     app.get("/department", async (req, res) => {
       const result = await departmentCollection
         .find()
@@ -112,7 +122,15 @@ async function run() {
         .toArray();
       res.send(result);
     });
-
+    // Delete department
+    app.delete("/department/:id", async (req, res) => {
+      const id = req.params.id;
+      const query = {
+        _id: new ObjectId(id),
+      };
+      const result = await departmentCollection.deleteOne(query);
+      res.send(result);
+    });
 
 
 
@@ -121,11 +139,8 @@ async function run() {
     // CURD Of Elections
     app.post("/election", async (req, res) => {
       const data = req.body;
-      const user = await findUser(data.email);
-      if (!user) {
         const result = await electionCollection.insertOne(data);
         res.send(result);
-      }
     });
 
     app.get("/election", async (req, res) => {
