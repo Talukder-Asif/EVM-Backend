@@ -105,6 +105,13 @@ async function run() {
         res.send(result);
       }
     });
+    app.get("/department", async (req, res) => {
+      const result = await departmentCollection
+        .find()
+        .sort({ _id: -1 })
+        .toArray();
+      res.send(result);
+    });
 
 
 
