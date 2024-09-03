@@ -26,6 +26,7 @@ async function run() {
     const database = client.db("KYAU_EVM");
     const userCollection = database.collection("user");
     const electionCollection = database.collection("Election");
+    const departmentCollection = database.collection("Department");
 
     // CRUD
     const findUser = (email) => {
@@ -94,6 +95,21 @@ async function run() {
       const result = await userCollection.deleteOne(query);
       res.send(result);
     });
+
+    // CURD Of Department
+    app.post("/department", async (req, res) => {
+      const data = req.body;
+      const user = await findUser(data.email);
+      if (!user) {
+        const result = await departmentCollection.insertOne(data);
+        res.send(result);
+      }
+    });
+
+
+
+
+
 
     // CURD Of Elections
     app.post("/election", async (req, res) => {
