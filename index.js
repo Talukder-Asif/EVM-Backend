@@ -27,6 +27,7 @@ async function run() {
     const userCollection = database.collection("user");
     const electionCollection = database.collection("Election");
     const departmentCollection = database.collection("Department");
+    const voterCollection = database.collection("Voter");
 
     // CRUD
     const findUser = (email) => {
@@ -131,6 +132,30 @@ async function run() {
       const result = await departmentCollection.deleteOne(query);
       res.send(result);
     });
+
+
+
+
+
+        // CURD Of Voters
+
+        const findVoters = (department) => {
+          return voterCollection.findOne({ department: department });
+        };
+    
+    
+        app.post("/voter", async (req, res) => {
+          const data = req.body;
+          const voter = await findVoters(data.department);
+          if (!department) {
+            const result = await voterCollection.insertOne(data);
+            res.send(result);
+          }else{
+            res.status(409).send("Department already exists");
+          }
+        });
+
+
 
 
 
