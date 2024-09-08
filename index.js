@@ -139,21 +139,37 @@ async function run() {
 
         // CURD Of Voters
 
-        const findVoters = (department) => {
-          return voterCollection.findOne({ department: department });
+        const findVoters = (studentID) => {
+          return voterCollection.findOne({ studentID: studentID });
         };
     
     
         app.post("/voter", async (req, res) => {
           const data = req.body;
-          const voter = await findVoters(data.department);
-          if (!department) {
+          const voter = await findVoters(data.studentID);
+          if (!voter) {
             const result = await voterCollection.insertOne(data);
             res.send(result);
           }else{
-            res.status(409).send("Department already exists");
+            res?.send("Voter already exists");
           }
         });
+// get voter
+        app.get("/voter", async (req, res) => {
+          const result = await voterCollection
+            .find()
+            .sort({ _id: -1 })
+            .toArray();
+          res.send(result);
+        });
+    
+
+
+
+
+
+
+        
 
 
 
