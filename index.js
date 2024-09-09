@@ -97,12 +97,23 @@ async function run() {
       res.send(result);
     });
 
+
+
+
+
+
+
+
+
+
+
+
+
     // CURD Of Department
 
     const findDepartment = (department) => {
       return departmentCollection.findOne({ department: department });
     };
-
 
     app.post("/department", async (req, res) => {
       const data = req.body;
@@ -110,11 +121,10 @@ async function run() {
       if (!department) {
         const result = await departmentCollection.insertOne(data);
         res.send(result);
-      }else{
+      } else {
         res.status(409).send("Department already exists");
       }
     });
-
 
     app.get("/department", async (req, res) => {
       const result = await departmentCollection
@@ -137,39 +147,47 @@ async function run() {
 
 
 
-        // CURD Of Voters
-
-        const findVoters = (studentID) => {
-          return voterCollection.findOne({ studentID: studentID });
-        };
-    
-    
-        app.post("/voter", async (req, res) => {
-          const data = req.body;
-          const voter = await findVoters(data.studentID);
-          if (!voter) {
-            const result = await voterCollection.insertOne(data);
-            res.send(result);
-          }else{
-            res?.send("Voter already exists");
-          }
-        });
-// get voter
-        app.get("/voter", async (req, res) => {
-          const result = await voterCollection
-            .find()
-            .sort({ _id: -1 })
-            .toArray();
-          res.send(result);
-        });
-    
 
 
 
 
 
 
-        
+
+
+
+    // CURD Of Voters
+
+    const findVoters = (studentID) => {
+      return voterCollection.findOne({ studentID: studentID });
+    };
+
+    app.post("/voter", async (req, res) => {
+      const data = req.body;
+      const voter = await findVoters(data.studentID);
+      if (!voter) {
+        const result = await voterCollection.insertOne(data);
+        res.send(result);
+      } else {
+        res?.send("Voter already exists");
+      }
+    });
+    // get voter
+    app.get("/voter", async (req, res) => {
+
+      const result = await voterCollection.find().sort({ studentID: 1 }).toArray();
+      res.send(result);
+    });
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -180,8 +198,8 @@ async function run() {
     // CURD Of Elections
     app.post("/election", async (req, res) => {
       const data = req.body;
-        const result = await electionCollection.insertOne(data);
-        res.send(result);
+      const result = await electionCollection.insertOne(data);
+      res.send(result);
     });
 
     app.get("/election", async (req, res) => {
@@ -232,17 +250,6 @@ async function run() {
         res.status(500).send("Error updating user");
       }
     });
-
-
-
-
-
-
-
-
-
-
-
 
     await client.db("admin").command({ ping: 1 });
     console.log(
