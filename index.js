@@ -181,6 +181,23 @@ async function run() {
 
 
 
+    // Delete all voters whose department matches the parameter
+    app.delete("/voters/:department", async (req, res) => {
+      try {
+        const { department } = req.params;  
+    
+        const result = await voterCollection.deleteMany({
+          department: department
+        });
+    
+        res.status(200).send({ message: `All voters from ${department} deleted successfully`, result });
+      } catch (error) {
+        res.status(500).send({ message: `Error deleting voters from ${department}`, error });
+      }
+    });
+
+
+
 
 
 
