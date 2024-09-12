@@ -133,6 +133,15 @@ async function run() {
         .toArray();
       res.send(result);
     });
+
+    // Get Single Department
+    app.get("/department/:id", async (req, res) => {
+      const departmentId = req.params.id;
+      const quary = { _id: new ObjectId(departmentId) };
+      const result = await departmentCollection
+        .findOne(quary)
+      res.send(result);
+    });
     // Delete department
     app.delete("/department/:id", async (req, res) => {
       const id = req.params.id;
