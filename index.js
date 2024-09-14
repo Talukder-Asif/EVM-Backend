@@ -97,18 +97,6 @@ async function run() {
       res.send(result);
     });
 
-
-
-
-
-
-
-
-
-
-
-
-
     // CURD Of Department
 
     const findDepartment = (department) => {
@@ -138,8 +126,7 @@ async function run() {
     app.get("/department/:id", async (req, res) => {
       const departmentId = req.params.id;
       const quary = { _id: new ObjectId(departmentId) };
-      const result = await departmentCollection
-        .findOne(quary)
+      const result = await departmentCollection.findOne(quary);
       res.send(result);
     });
     // Delete department
@@ -151,19 +138,6 @@ async function run() {
       const result = await departmentCollection.deleteOne(query);
       res.send(result);
     });
-
-
-
-
-
-
-
-
-
-
-
-
-
 
     // CURD Of Voters
 
@@ -183,43 +157,47 @@ async function run() {
     });
     // get voter
     app.get("/voter", async (req, res) => {
-
-      const result = await voterCollection.find().sort({ studentID: 1 }).toArray();
+      const result = await voterCollection
+        .find()
+        .sort({ studentID: 1 })
+        .toArray();
       res.send(result);
     });
 
+    // get voter
+    app.get("/voter/:department", async (req, res) => {
+      const { department } = req.params;
 
+      const result = await voterCollection
+        .find({
+          department: department
+        })
+        .sort({ studentID: 1 })
+        .toArray();
+      res.send(result);
+    });
 
     // Delete all voters whose department matches the parameter
     app.delete("/voters/:department", async (req, res) => {
       try {
-        const { department } = req.params;  
-    
+        const { department } = req.params;
+
         const result = await voterCollection.deleteMany({
-          department: department
+          department: department,
         });
-    
-        res.status(200).send({ message: `All voters from ${department} deleted successfully`, result });
+
+        res
+          .status(200)
+          .send({
+            message: `All voters from ${department} deleted successfully`,
+            result,
+          });
       } catch (error) {
-        res.status(500).send({ message: `Error deleting voters from ${department}`, error });
+        res
+          .status(500)
+          .send({ message: `Error deleting voters from ${department}`, error });
       }
     });
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
     // CURD Of Elections
     app.post("/election", async (req, res) => {
