@@ -139,6 +139,32 @@ async function run() {
       res.send(result);
     });
 
+    // update department information
+    app.put("/department/:id", async (req, res) => {
+      const id = req.params.id;
+      const data = req.body;
+      const filter = { _id: new ObjectId(id) };
+      const options = { upsert: true };
+      const updateTeam = {
+        $set: {
+          department: data?.department,
+          program: data?.program,
+          batch: data?.batch,
+        },
+      };
+      try {
+        const result = await departmentCollection.updateOne(
+          filter,
+          updateTeam,
+          options
+        );
+        res.send(result);
+      } catch (err) {
+        console.error("Error updating user:", err);
+        res.status(500).send("Error updating user");
+      }
+    });
+
     // CURD Of Voters
 
     const findVoters = (studentID) => {
@@ -170,7 +196,7 @@ async function run() {
 
       const result = await voterCollection
         .find({
-          department: department
+          department: department,
         })
         .sort({ studentID: 1 })
         .toArray();
@@ -186,12 +212,10 @@ async function run() {
           department: department,
         });
 
-        res
-          .status(200)
-          .send({
-            message: `All voters from ${department} deleted successfully`,
-            result,
-          });
+        res.status(200).send({
+          message: `All voters from ${department} deleted successfully`,
+          result,
+        });
       } catch (error) {
         res
           .status(500)
