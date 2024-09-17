@@ -204,24 +204,26 @@ async function run() {
     });
 
     // Delete all voters whose department matches the parameter
-    app.delete("/voters/:department", async (req, res) => {
+    app.delete("/voters/:department/:batch", async (req, res) => {
       try {
-        const { department } = req.params;
-
+        const { department, batch } = req.params;
+    
         const result = await voterCollection.deleteMany({
           department: department,
+          batch: batch, // Assuming batch is a field in your voter document
         });
-
+    
         res.status(200).send({
-          message: `All voters from ${department} deleted successfully`,
+          message: `All voters from ${department} department and ${batch} batch deleted successfully`,
           result,
         });
       } catch (error) {
         res
           .status(500)
-          .send({ message: `Error deleting voters from ${department}`, error });
+          .send({ message: `Error deleting voters from ${department} department and ${batch} batch`, error });
       }
     });
+    
 
     // CURD Of Elections
     app.post("/election", async (req, res) => {
